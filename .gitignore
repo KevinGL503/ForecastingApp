@@ -1,2 +1,4 @@
 data/
 pycache
+.vscode
+__pycache__
