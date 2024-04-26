@@ -4,6 +4,7 @@ from datetime import datetime
 import scripts.combine_data as CD
 import plotly.express as px
 from sklearn.linear_model import LinearRegression
+from sklearn.tree import DecisionTreeRegressor 
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import r2_score, mean_squared_error
 #%% Get fuel, prices, and demand data
@@ -50,4 +51,15 @@ y_pred = linear_model.predict(X_test)
 # %% Check Linear model accuracy 
 mse = mean_squared_error(y_test, y_pred)
 r2 = r2_score(y_test, y_pred)
+print(f'mse: {mse}, r2: {r2}')
+#%% Train Decision Tree Regression
+tree = DecisionTreeRegressor(max_depth=10)
+tree.fit(X_train, y_train)
+# Predictions
+tree_pred = tree.predict(X_test)
+
+# Evaluate the model
+mse = mean_squared_error(y_test, tree_pred)
+r2 = r2_score(y_test, y_pred)
+print(f'mse: {mse}, r2: {r2}')
 # %%
