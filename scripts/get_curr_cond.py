@@ -27,7 +27,7 @@ def get_curr_fuel():
         current[s] = curr['gen']
 
     current['TS'] = pd.to_datetime(current['TS'])
-    current['TS'] = current['TS'] + pd.DateOffset(seconds=2)
+    current['TS'] = current['TS'].apply(lambda x: x - pd.DateOffset(seconds=x.second) + pd.DateOffset(minutes=1))
     current.set_index('TS', inplace=True)
     current = current.resample('15min').asfreq().interpolate(method='linear')
     current = current.bfill()
