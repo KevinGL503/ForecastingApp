@@ -2,6 +2,10 @@
 import pandas as pd
 from datetime import datetime
 import scripts.combine_data as CD
+import plotly.express as px
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import r2_score, mean_squared_error
 #%% Get fuel, prices, and demand data
 months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun']
 price_point = ['HB_BUSAVG']
@@ -16,6 +20,7 @@ data = CD.combined_data(fuel, prices, demand, start_date, end_date)
 # %% Feature engineering and outlier analysis 
 data['Prev_Load'] = data['Load'].shift(1)
 data['Net_Load'] = data['Load'] - data['Wind'] - data['Solar']
+data['Total_Renew'] = data['Solar'] + data['Wind']
 data.dropna(inplace=True)
 
 std = data['Price'].std()
@@ -25,4 +30,24 @@ ub = mean + (3*std)
 lb = mean - (3*std)
 data['Price'] = data['Price'].apply(lambda x: median if x < lb or x > ub else x)
 
+# %% Some data visualization 
+px.line(data.groupby(['Day','Hour'])['Total_Renew'].mean().reset_index(),x='Hour', \
+        y='Total_Renew',color='Day', title="Avg Hourly Solar Gen By Day")
+px.line(data.groupby(['Day', 'Hour'])['Price'].mean().reset_index(), x='Hour',
+        y='Price', color='Day', title='Avg Hourly Price By Day')
+px.line(data.groupby(['Hour', 'Day'])['Load'].mean().reset_index(), x='Hour',
+        y='Load', color='Day', title='Avg Hourly Load By Day')
+# %% Split Training data
+X = data.drop(["Price"], axis=1)
+y = data["Price"]
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+#%% Train a Linear regression model
+linear_model = LinearRegression()
+linear_model.fit(X_train,y_train)
+y_pred = linear_model.predict(X_test)
+
+# %% Check Linear model accuracy 
+mse = mean_squared_error(y_test, y_pred)
+r2 = r2_score(y_test, y_pred)
 # %%
