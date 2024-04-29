@@ -5,6 +5,8 @@ import scripts.combine_data as CD
 import plotly.express as px
 from sklearn.linear_model import LinearRegression
 from sklearn.tree import DecisionTreeRegressor 
+from sklearn.ensemble import RandomForestRegressor
+from sklearn.ensemble import GradientBoostingRegressor
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import r2_score, mean_squared_error
 #%% Get fuel, prices, and demand data
@@ -51,7 +53,7 @@ y_pred = linear_model.predict(X_test)
 # %% Check Linear model accuracy 
 mse = mean_squared_error(y_test, y_pred)
 r2 = r2_score(y_test, y_pred)
-print(f'mse: {mse}, r2: {r2}')
+print(f'Linear mse: {mse}, r2: {r2}')
 #%% Train Decision Tree Regression
 tree = DecisionTreeRegressor(max_depth=10)
 tree.fit(X_train, y_train)
@@ -60,6 +62,23 @@ tree_pred = tree.predict(X_test)
 
 # Evaluate the model
 mse = mean_squared_error(y_test, tree_pred)
-r2 = r2_score(y_test, y_pred)
-print(f'mse: {mse}, r2: {r2}')
+r2 = r2_score(y_test, tree_pred)
+print(f'Decision tree mse: {mse}, r2: {r2}')
+# %% Train random forest regression
+forest = RandomForestRegressor(n_estimators=100, max_depth=5, random_state=42)
+forest.fit(X_train, y_train)
+forest_pred = forest.predict(X_test)
+
+# Evaluate the model
+mse = mean_squared_error(y_test, forest_pred)
+r2 = r2_score(y_test, forest_pred)
+print(f'Forest mse: {mse}, r2: {r2}')
+# %% Gradient boosting regreesion model
+gb_model = GradientBoostingRegressor(n_estimators=100, learning_rate=0.1, max_depth=5, random_state=42)
+gb_model.fit(X_train, y_train)
+gb_pred = gb_model.predict(X_test)
+
+mse = mean_squared_error(y_test, forest_pred)
+r2 = r2_score(y_test, forest_pred)
+print(f'Gradient Boosting mse: {mse}, r2: {r2}')
 # %%
