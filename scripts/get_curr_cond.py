@@ -7,6 +7,13 @@ import json
 from datetime import datetime
 
 def get_curr_fuel():
+    """
+    This function retrieves current day fuel data for wind and solar sources,
+    processes the data, and returns a resampled and interpolated DataFrame.
+    :return: a DataFrame containing the current fuel mix data for wind and solar
+    resampled in 15 minutes intervals
+    """
+
     fuels = requests.get('https://www.ercot.com/api/1/services/read/dashboards/fuel-mix.json')
     data = fuels.json()['data'][datetime.strftime(datetime.now(), "%Y-%m-%d")]
     current = pd.DataFrame()
@@ -34,6 +41,11 @@ def get_curr_fuel():
     return current
 
 def get_curr_load():
+    """
+    The function `get_curr_load` retrieves and processes current day electricity
+    demand data from ERCOT.
+    :return: a DataFrame containing the timestamped load
+    """
     load = requests.get('https://www.ercot.com/api/1/services/read/dashboards/supply-demand.json')
     data1 = load.json()['data']
     rows = []
@@ -49,6 +61,10 @@ def get_curr_load():
 
 
 def get_curr_price():
+    """
+    This function retrieves current day electricity prices data from ERCOT
+    :return: a DataFrame containing the timestamped prices
+    """
     prices = requests.get("https://www.ercot.com/api/1/services/read/dashboards/system-wide-prices.json")
     data2 = prices.json()['rtSppData']
     rows = []
@@ -62,7 +78,15 @@ def get_curr_price():
     price.set_index('TS', inplace=True)
     return price
 
+
 def get_curr_cond():
+    """
+    This function retrieves current fuel data, load data, and price data, processes
+    and calculates various features.
+    :return: a DataFrame containing the columns 'Day', 'Hour', 'Price', 'Wind', 
+    'Solar', 'Load', 'Prev_Load', 'Net_Load', and 'Total_Renew'.
+    """
+
     df = get_curr_fuel()
     load = get_curr_load()
     price = get_curr_price()
