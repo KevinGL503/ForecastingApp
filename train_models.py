@@ -9,6 +9,7 @@ from sklearn.ensemble import RandomForestRegressor
 from sklearn.ensemble import GradientBoostingRegressor
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import r2_score, mean_squared_error
+import pickle
 #%% Get fuel, prices, and demand data
 months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun']
 price_point = ['HB_BUSAVG']
@@ -81,4 +82,11 @@ gb_pred = gb_model.predict(X_test)
 mse = mean_squared_error(y_test, forest_pred)
 r2 = r2_score(y_test, forest_pred)
 print(f'Gradient Boosting mse: {mse}, r2: {r2}')
+# %% Save the trained models
+with open('models.pkl', 'wb') as models:
+    pickle.dump(linear_model, models)
+    pickle.dump(tree, models)
+    pickle.dump(forest, models)
+    pickle.dump(gb_model, models)
+
 # %%
