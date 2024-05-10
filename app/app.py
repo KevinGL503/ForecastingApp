@@ -11,7 +11,7 @@ app.layout = html.Div(
         dbc.NavbarSimple(
             children=[
                 dbc.NavItem(dbc.NavLink("Home", href="/")),
-                dbc.NavItem(dbc.NavLink("Data", href="/dashboard")),
+                dbc.NavItem(dbc.NavLink("Data", href="/data")),
                 dbc.NavItem(dbc.NavLink("archive", href="/archive")),
             ],
             brand=html.Img(
