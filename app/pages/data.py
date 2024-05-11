@@ -7,7 +7,6 @@ from dash import dcc
 from dash import html
 from dash import Input, Output
 
-# dash.register_page(__name__)
 dash.register_page(__name__)
 
 with open("./models/models.pkl", "rb") as f:
@@ -35,9 +34,24 @@ fig.update_layout(legend=dict(
     xanchor="center",
     x=0.5
 ))
+
+fig1 = px.line(curr, x=curr.index, y=['Price','Lin'], 
+            labels={'Price': 'Price ($)', 'TS': '', "value": 'Price'},
+            title='Daily SPPs (Actual vs Forecasted)')
+fig1.update_layout(legend_title_text='Models', hovermode="x unified")
+fig1.update_traces(hovertemplate='$ %{y}')
+fig1.update_layout(legend=dict(
+    orientation="h",  
+    yanchor="bottom",
+    y=-0.25,
+    xanchor="center",
+    x=0.5
+))
 #%%
 
 layout = html.Div([
-    html.H1('Daily SPPs (Actual vs Forecasted)'),
-    dcc.Graph(figure=fig, id="Fuel-mix-graph", config={'displaylogo': False})
+    html.H1('Daily SPPs (Actual vs Forecasted)',style={'padding':'30px'}
+            ),
+    dcc.Graph(figure=fig, id="Fuel-mix-graph", config={'displaylogo': False}),
+    dcc.Graph(figure=fig1, config={'displaylogo': False})
 ])
