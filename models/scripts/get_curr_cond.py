@@ -100,6 +100,7 @@ def get_curr_cond():
     df['Prev_Load'] = df['Load'].shift(1)
     df['Net_Load'] = df['Load'] - df['Wind'] - df['Solar']
     df['Total_Renew'] = df['Wind'] + df['Solar']
+    df['Month'] = df.index.month
     
     return df[['Day', 'Hour', 'Price', 'Wind', 'Solar', 'Load', 'Prev_Load', 'Net_Load', 'Total_Renew']]
 

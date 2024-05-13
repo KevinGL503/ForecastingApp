@@ -72,3 +72,28 @@ def combined_data(fuel, rtm, demand, s_d, e_d):
 	combined_df['Load'] = df[(df.index >= s_d) & (df.index < e_d)]['ERCOT']
 
 	return combined_df
+
+def prep_data(data):
+	"""
+	The function `prep_data` performs feature engineering, outlier analysis, and
+	data preprocessing on the data.
+	
+	:param data: df containing the combined data 
+	:return: The function `prep_data` is returning the modified data after
+	performing feature engineering, outlier analysis, and data preprocessing steps.
+	"""
+	# Feature engineering and outlier analysis 
+	data['Prev_Load'] = data['Load'].shift(1)
+	data['Net_Load'] = data['Load'] - data['Wind'] - data['Solar']
+	data['Total_Renew'] = data['Solar'] + data['Wind']
+	data['Month'] = data.index.month
+	data.dropna(inplace=True)
+
+	std = data['Price'].std()
+	mean = data['Price'].mean()
+	median = data['Price'].median()
+	ub = mean + (3*std)
+	lb = mean - (3*std)
+	data['Price'] = data['Price'].apply(lambda x: median if x < lb or x > ub else x)
+
+	return data
