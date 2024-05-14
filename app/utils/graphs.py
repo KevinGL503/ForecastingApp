@@ -32,7 +32,7 @@ def get_graph(region):
 
     fig = px.line(curr, x=curr.index, y=['Price','GB'], 
                 labels={'Price': 'Price ($)', 'TS': '', "value": 'Price'},
-                title='Daily SPPs (Actual vs Forecasted)')
+                title=f'Daily SPPs for {region}')
     fig.update_layout(legend_title_text='Models', hovermode="x unified")
     fig.update_traces(hovertemplate='$ %{y}')
     fig.update_layout(legend=dict(
