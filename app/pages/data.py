@@ -1,6 +1,7 @@
 #%%
 import pickle
 import utils.get_curr_cond as util
+import utils.graphs as gp
 import plotly.express as px
 import dash
 from dash import dcc
@@ -8,50 +9,9 @@ from dash import html
 from dash import Input, Output
 
 dash.register_page(__name__)
-
-with open("./models/models.pkl", "rb") as f:
-    linear = pickle.load(f)
-    tree = pickle.load(f)
-    forest = pickle.load(f)
-    gb_model = pickle.load(f)
-
-curr = util.get_curr_cond()
-curr.dropna(inplace=True)
-curr['Lin'] = linear.predict(curr[['Day', 'Hour', 'Wind', 'Solar', 'Load', 'Prev_Load', 'Net_Load', 'Total_Renew']])
-curr['Tree'] = tree.predict(curr[['Day', 'Hour', 'Wind', 'Solar', 'Load', 'Prev_Load', 'Net_Load', 'Total_Renew']])
-curr['Forest'] = forest.predict(curr[['Day', 'Hour', 'Wind', 'Solar', 'Load', 'Prev_Load', 'Net_Load', 'Total_Renew']])
-curr['GB'] = gb_model.predict(curr[['Day', 'Hour', 'Wind', 'Solar', 'Load', 'Prev_Load', 'Net_Load', 'Total_Renew']])
-
-fig = px.line(curr, x=curr.index, y=['Price','GB'], 
-            labels={'Price': 'Price ($)', 'TS': '', "value": 'Price'},
-            title='Daily SPPs (Actual vs Forecasted)')
-fig.update_layout(legend_title_text='Models', hovermode="x unified")
-fig.update_traces(hovertemplate='$ %{y}')
-fig.update_layout(legend=dict(
-    orientation="h",  
-    yanchor="bottom",
-    y=-0.25,
-    xanchor="center",
-    x=0.5
-))
-
-fig1 = px.line(curr, x=curr.index, y=['Price','Lin'], 
-            labels={'Price': 'Price ($)', 'TS': '', "value": 'Price'},
-            title='Daily SPPs (Actual vs Forecasted)')
-fig1.update_layout(legend_title_text='Models', hovermode="x unified")
-fig1.update_traces(hovertemplate='$ %{y}')
-fig1.update_layout(legend=dict(
-    orientation="h",  
-    yanchor="bottom",
-    y=-0.25,
-    xanchor="center",
-    x=0.5
-))
-#%%
-
+fig = gp.get_graph('hbBusAvg')
 layout = html.Div([
     html.H1('Daily SPPs (Actual vs Forecasted)',style={'padding':'30px'}
             ),
     dcc.Graph(figure=fig, id="Fuel-mix-graph", config={'displaylogo': False}),
-    dcc.Graph(figure=fig1, config={'displaylogo': False})
 ])

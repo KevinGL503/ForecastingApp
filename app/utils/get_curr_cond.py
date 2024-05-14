@@ -60,7 +60,7 @@ def get_curr_load():
     return demand
 
 
-def get_curr_price():
+def get_curr_price(zone):
     """
     This function retrieves current day electricity prices data from ERCOT
     :return: a DataFrame containing the timestamped prices
@@ -70,7 +70,7 @@ def get_curr_price():
     rows = []
     for patch in data2:
         this_row = {'TS':patch['timestamp']}
-        this_row.update({'Price':patch['hbBusAvg']})
+        this_row.update({'Price':patch[f'{zone}']})
         rows.append(this_row)
 
     price = pd.DataFrame(rows)
@@ -79,7 +79,7 @@ def get_curr_price():
     return price
 
 
-def get_curr_cond():
+def get_curr_cond(zone='hbBusAvg'):
     """
     This function retrieves current fuel data, load data, and price data, processes
     and calculates various features.
@@ -89,7 +89,7 @@ def get_curr_cond():
 
     df = get_curr_fuel()
     load = get_curr_load()
-    price = get_curr_price()
+    price = get_curr_price(zone)
 
     df['Load'] = load['Load']
     df['Price'] = price['Price']
