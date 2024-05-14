@@ -25,10 +25,10 @@ def get_graph(region):
     linear, tree, forest, gb_model = get_models()
     curr = cc.get_curr_cond(region)
     curr.dropna(inplace=True)
-    curr['Lin'] = linear.predict(curr[['Day', 'Hour', 'Wind', 'Solar', 'Load', 'Prev_Load', 'Net_Load', 'Total_Renew']])
-    curr['Tree'] = tree.predict(curr[['Day', 'Hour', 'Wind', 'Solar', 'Load', 'Prev_Load', 'Net_Load', 'Total_Renew']])
-    curr['Forest'] = forest.predict(curr[['Day', 'Hour', 'Wind', 'Solar', 'Load', 'Prev_Load', 'Net_Load', 'Total_Renew']])
-    curr['GB'] = gb_model.predict(curr[['Day', 'Hour', 'Wind', 'Solar', 'Load', 'Prev_Load', 'Net_Load', 'Total_Renew']])
+    curr['Lin'] = linear.predict(curr[['Day', 'Hour', 'Wind', 'Solar', 'Load', 'Prev_Load', 'Net_Load', 'Total_Renew', 'Month']])
+    curr['Tree'] = tree.predict(curr[['Day', 'Hour', 'Wind', 'Solar', 'Load', 'Prev_Load', 'Net_Load', 'Total_Renew','Month']])
+    curr['Forest'] = forest.predict(curr[['Day', 'Hour', 'Wind', 'Solar', 'Load', 'Prev_Load', 'Net_Load', 'Total_Renew','Month']])
+    curr['GB'] = gb_model.predict(curr[['Day', 'Hour', 'Wind', 'Solar', 'Load', 'Prev_Load', 'Net_Load', 'Total_Renew','Month']])
 
     fig = px.line(curr, x=curr.index, y=['Price','GB'], 
                 labels={'Price': 'Price ($)', 'TS': '', "value": 'Price'},

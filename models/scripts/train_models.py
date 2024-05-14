@@ -70,7 +70,7 @@ mse = mean_squared_error(y_test, forest_pred)
 r2 = r2_score(y_test, forest_pred)
 print(f'Gradient Boosting mse: {mse}, r2: {r2}')
 # %% Save the trained models
-with open('models.pkl', 'wb') as models:
+with open('./models/models.pkl', 'wb') as models:
     pickle.dump(linear_model, models)
     pickle.dump(tree, models)
     pickle.dump(forest, models)
