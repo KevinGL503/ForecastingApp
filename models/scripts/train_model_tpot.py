@@ -41,7 +41,9 @@ tpot_model.fit(X_train,y_train)
 #evaluate model
 y_pred = tpot_model.predict(X_test)
 mse = mean_squared_error(y_test,y_pred)
+r2 = r2_score(y_test, y_pred)
 print(f"MSE of TPOT Regressor model {mse}")
+print(f"R2 Score : {r2}")
 # %% Save the trained models
 with open('./models/models_tpot.pkl', 'wb') as models:
     pickle.dump(tpot_model, models)
