@@ -1,6 +1,6 @@
 import pytest
 from datetime import datetime
-from models.scripts.train_model_tpot import get_data, combine_data, split_data, train_model, evaluate_model, save_model
+from train_model_tpot import get_data, combine_data, split_data, train_model, evaluate_model, save_model
 import combine_data as CD
 import os
 
