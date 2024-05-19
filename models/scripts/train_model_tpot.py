@@ -31,7 +31,13 @@ def split_data(data):
     return X_train, X_test, y_train, y_test
 
 def train_model(X_train, y_train):
-    tpot_model = TPOTRegressor(generations=5, population_size=20, verbosity=2, random_state=42)
+    tpot_model = TPOTRegressor(generations=10,    # Increase the number of generations
+                               population_size=100,    # Increase the population size
+                               verbosity=3, 
+                               random_state=42, 
+                               scoring='neg_mean_squared_error',    # Use negative mean squared error for scoring
+                               cv=5,    # Increase the number of cross-validation folds
+                               n_jobs=-1)    # Use all available cores
     tpot_model.fit(X_train, y_train)
     return tpot_model
 
@@ -40,7 +46,6 @@ def evaluate_model(tpot_model, X_test, y_test):
     mse = mean_squared_error(y_test, y_pred)
     r2 = r2_score(y_test, y_pred)
     return mse, r2
-
 def save_model(tpot_model, filepath):
     with open(filepath, 'wb') as models:
         pickle.dump(tpot_model, models)
@@ -66,6 +71,7 @@ def main():
     print(f"R2 Score: {r2}")
     
     save_model(tpot_model, './models/models_tpot.pkl')
+    tpot_model.export('./models/models_tpot.py')
 
 if __name__ == "__main__":
     main()
