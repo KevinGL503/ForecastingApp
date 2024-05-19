@@ -1,12 +1,10 @@
-import pandas as pd
+from sklearn.neural_network import MLPRegressor
 from datetime import datetime
-import combine_data as CD
-import plotly.express as px
 from sklearn.model_selection import train_test_split
+import plotly.express as px
+import scripts.combine_data as CD
 from sklearn.metrics import mean_squared_error, r2_score
 import pickle
-from tpot import TPOTRegressor
-
 def get_data(months, price_point, fuels):
     fuel, prices, demand = CD.get_fuel_rtm_demand_data(months, price_point, fuels)
     return fuel, prices, demand
@@ -29,27 +27,22 @@ def split_data(data):
     y = data["Price"]
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
     return X_train, X_test, y_train, y_test
-
+#use NN Regression model to predict the target value
 def train_model(X_train, y_train):
-    tpot_model = TPOTRegressor(generations=10,    # Increase the number of generations
-                               population_size=100,    # Increase the population size
-                               verbosity=3, 
-                               random_state=42, 
-                               scoring='neg_mean_squared_error',    # Use negative mean squared error for scoring
-                               cv=5,    # Increase the number of cross-validation folds
-                               n_jobs=-1)    # Use all available cores
-    tpot_model.fit(X_train, y_train)
-    return tpot_model
-
-def evaluate_model(tpot_model, X_test, y_test):
-    y_pred = tpot_model.predict(X_test)
+    nn_model = MLPRegressor(hidden_layer_sizes=(100, 100), max_iter=1000, random_state=42)
+    nn_model.fit(X_train, y_train)
+    return nn_model
+#evaluate the model
+def evaluate_model(nn_model, X_test, y_test):
+    y_pred = nn_model.predict(X_test)
     mse = mean_squared_error(y_test, y_pred)
     r2 = r2_score(y_test, y_pred)
     return mse, r2
-def save_model(tpot_model, filepath):
+#save the model
+def save_model(nn_model, filepath):
     with open(filepath, 'wb') as models:
-        pickle.dump(tpot_model, models)
-
+        pickle.dump(nn_model, models)
+# Create the neural network regression model
 def main():
     months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug']
     price_point = ['HB_BUSAVG']
@@ -64,14 +57,13 @@ def main():
     
     X_train, X_test, y_train, y_test = split_data(data)
     
-    tpot_model = train_model(X_train, y_train)
+    nn = train_model(X_train, y_train)
     
-    mse, r2 = evaluate_model(tpot_model, X_test, y_test)
+    mse, r2 = evaluate_model(nn, X_test, y_test)
     print(f"MSE of TPOT Regressor model: {mse}")
     print(f"R2 Score: {r2}")
     
-    save_model(tpot_model, './models/models_tpot.pkl')
-    tpot_model.export('./models/models_tpot.py')
+    save_model(nn, './models/models_nn.pkl')
 
 if __name__ == "__main__":
     main()

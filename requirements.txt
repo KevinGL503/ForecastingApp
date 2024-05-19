@@ -11,3 +11,4 @@ deap==1.3.3
 update-checker==0.18.0
 stopit==1.1.2
 xgboost==1.6.2
+autokeras==1.0.17
