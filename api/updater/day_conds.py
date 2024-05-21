@@ -4,13 +4,26 @@
 import requests
 import pandas as pd
 
-def get_today_predicted_load():
+def get_today_predicted_fuel():
     cond = requests.get("https://www.ercot.com/api/1/services/read/dashboards/combine-wind-solar.json")
     cond1 = cond.json()
     rows = []
     for conds in cond1['currentDay']['data'].values():
         this_row = {'TS':conds['timestamp'],
                     'wind':conds['stwpf'], 'solar':conds['stppf']}
+        rows.append(this_row)
+    df = pd.DataFrame(rows)
+    df['TS'] = pd.to_datetime(df['TS'])
+
+    return df
+
+def get_today_predicted_load():
+    cond = requests.get("https://www.ercot.com/api/1/services/read/dashboards/system-wide-demand.json")
+    load = cond.json()
+    rows = []
+    for l in load['currentDay']['data']:
+        this_row = {'TS':l['timestamp'],
+                    'wind':l['currentLoadForecast']}
         rows.append(this_row)
     df = pd.DataFrame(rows)
     df['TS'] = pd.to_datetime(df['TS'])
