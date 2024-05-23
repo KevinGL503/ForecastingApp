@@ -53,3 +53,16 @@ class DB():
         df = dc.get_today_cond()
         df.to_sql('conditions', self.con, index=True, index_label='TS', \
                   if_exists='replace')
+        
+    def get_stored_curr_cond(self):
+        """
+        This function retrieves and returns all stored current conditions data from
+        the `conditions` table in the database. 
+        :return: a DataFrame containing the current conditions data
+        """
+        query = self.cur.execute("SELECT * FROM conditions")
+        cols = [col[0] for col in query.description]
+        data = query.fetchall()
+        df = pd.DataFrame(data=data, columns=cols)
+
+        return df
