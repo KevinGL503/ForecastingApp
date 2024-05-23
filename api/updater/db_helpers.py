@@ -24,7 +24,17 @@ def make_new_table(name, columns):
     """
     db_exists()
     cols = ",".join(str(element) for element in columns)
-    query = f" CREATE TABLE IF NOT EXISTS {name} ({cols})"
+    query = f"CREATE TABLE IF NOT EXISTS {name} ({cols})"
     con = sqlite3.connect('api/updater/forecastDB.db')
     cur = con.cursor()
     cur.execute(query)
+
+
+def update_curr_cond():
+    """
+    The function `update_curr_cond` gets the current conditions and stores them
+    in the database in a table called "conditions"
+    """
+    con = sqlite3.connect('api/updater/forecastDB.db')
+    df = dc.get_today_cond()
+    df.to_sql('conditions', con, index=True, index_label='TS', if_exists='replace')
