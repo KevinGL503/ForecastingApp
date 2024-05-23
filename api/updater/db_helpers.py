@@ -15,8 +15,11 @@ class DB():
         file that will be used. By default, it is set `'api/updater/forecastDB.db'`
         This parameter allows you to specify a custom database file path 
         """
-        self.con = sqlite3.connect(db_file_path)
-        self.cur = self.con.cursor()
+        try:
+            self.con = sqlite3.connect(db_file_path)
+            self.cur = self.con.cursor()
+        except Exception as e:
+            print(e.args[0])
 
     def db_exists(self):
         """

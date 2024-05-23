@@ -63,4 +63,4 @@ def get_today_cond():
     df['Total_Renew'] = df['Wind'] + df['Solar']
     df['Month'] = df.index.month
     df.bfill(inplace=True)
-    return df[['Day', 'Hour', 'Wind', 'Solar', 'Load', 'Prev_Load', 'Net_Load', 'Total_Renew']]
+    return df[['Day', 'Hour', 'Wind', 'Solar', 'Load', 'Prev_Load', 'Net_Load', 'Total_Renew', 'Month']]
