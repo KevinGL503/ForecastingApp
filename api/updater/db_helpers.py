@@ -58,11 +58,13 @@ class DB():
         """
         This function retrieves and returns all stored current conditions data from
         the `conditions` table in the database. 
-        :return: a DataFrame containing the current conditions data
+        :return: a timeseries DataFrame containing the current conditions data
         """
         query = self.cur.execute("SELECT * FROM conditions")
         cols = [col[0] for col in query.description]
         data = query.fetchall()
         df = pd.DataFrame(data=data, columns=cols)
+        df['TS'] = pd.to_datetime(df['TS'])
+        df.set_index('TS', inplace=True)
 
         return df
