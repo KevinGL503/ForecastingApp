@@ -18,7 +18,7 @@ def get_today_predicted_fuel():
                     'Wind':conds['stwpf'], 'Solar':conds['stppf']}
         rows.append(this_row)
     df = pd.DataFrame(rows)
-    df['TS'] = pd.to_datetime(df['TS'])
+    df['TS'] = pd.to_datetime(df['TS']) - pd.DateOffset(hours=1)
 
     return df
 
@@ -36,7 +36,7 @@ def get_today_predicted_load():
                     'Load':l['currentLoadForecast']}
         rows.append(this_row)
     df = pd.DataFrame(rows)
-    df['TS'] = pd.to_datetime(df['TS'])
+    df['TS'] = pd.to_datetime(df['TS']) - pd.DateOffset(hours=1)
 
     return df
 
@@ -64,3 +64,22 @@ def get_today_cond():
     df['Month'] = df.index.month
     df.bfill(inplace=True)
     return df[['Day', 'Hour', 'Wind', 'Solar', 'Load', 'Prev_Load', 'Net_Load', 'Total_Renew', 'Month']]
+
+
+def get_today_prices(zone='hbBusAvg'):
+    """
+    This function retrieves current day electricity prices data from ERCOT
+    :return: a timeseries DataFrame prices
+    """
+    prices = requests.get("https://www.ercot.com/api/1/services/read/dashboards/system-wide-prices.json")
+    data = prices.json()['rtSppData']
+    rows = []
+    for patch in data:
+        this_row = {'TS':patch['timestamp']}
+        this_row.update({'Price':patch[f'{zone}']})
+        rows.append(this_row)
+
+    price = pd.DataFrame(rows)
+    price['TS'] = pd.to_datetime(price['TS'])
+    price.set_index('TS', inplace=True)
+    return price
