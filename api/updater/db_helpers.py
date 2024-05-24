@@ -68,3 +68,12 @@ class DB():
         df.set_index('TS', inplace=True)
 
         return df
+    
+    def update_curr_prices(self):
+        """
+        The function `update_curr_prices` retrieves today's prices stores them 
+        in a df, and then writes the data to a SQL table named 'prices'.
+        """
+        df = dc.get_today_prices()
+        df.to_sql('prices', self.con, index=True, index_label='TS', \
+                  if_exists='replace')

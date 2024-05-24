@@ -76,7 +76,7 @@ def get_today_prices(zone='hbBusAvg'):
     rows = []
     for patch in data:
         this_row = {'TS':patch['timestamp']}
-        this_row.update({'Price':patch[f'{zone}']})
+        this_row.update({zone:patch[f'{zone}']})
         rows.append(this_row)
 
     price = pd.DataFrame(rows)
