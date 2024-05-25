@@ -105,3 +105,5 @@ def main():
         pickle.dump(tree, models)
         pickle.dump(forest, models)
         pickle.dump(gb_model, models)
+if __name__ == '__main__':
+    main()

@@ -4,3 +4,4 @@ pycache
 __pycache__
 .venv
 .github
+.pytest_cache
