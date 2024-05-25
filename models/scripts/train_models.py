@@ -52,6 +52,18 @@ def train_forest_model(X_train, y_train, name):
     forest = RandomForestRegressor(n_estimators=100, max_depth=5, random_state=42)
     forest.fit(X_train, y_train)
     return forest
+from sklearn.model_selection import GridSearchCV
+
+def improve_model(X_train, y_train, model):
+    model = model
+    param_grid = {
+        'n_estimators': [50, 100, 200],
+        'max_depth': [None, 10, 20, 30],
+        'min_samples_split': [2, 5, 10]
+    }
+    grid_search = GridSearchCV(estimator=model, param_grid=param_grid, cv=3, scoring='neg_mean_squared_error')
+    grid_search.fit(X_train, y_train)
+    return grid_search.best_estimator_
 
 # %% Gradient boosting regreesion model function
 def train_gb_model(X_train, y_train, name):
@@ -81,13 +93,20 @@ def main():
     visualize_data(data)
     
     X_train, X_test, y_train, y_test = split_data(data)
-    #do multithreading here
     
+    print('Training models')
     linear_model = train_linear_model(X_train, y_train, 'Linear')
     tree = train_tree_model(X_train, y_train, 'Tree')
     forest = train_forest_model(X_train, y_train, 'Forest')
     gb_model = train_gb_model(X_train, y_train, 'Gradient Boosting')
     
+    #imrpove models
+    print('Improving models')
+    forest = improve_model(X_train, y_train, forest)
+    gb_model = improve_model(X_train, y_train, gb_model)
+    linear_model = improve_model(X_train, y_train, linear_model)
+    tree = improve_model(X_train, y_train, tree)
+
     mse, r2 = evaluate_model(linear_model, 'Linear', X_test, y_test)
     print(f'Linear Model: MSE={mse}, R2={r2}')
     
