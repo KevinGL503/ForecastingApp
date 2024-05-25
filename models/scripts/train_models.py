@@ -1,5 +1,4 @@
-#%%
-import pandas as pd
+"""This File uses Linear Regression, Decision Tree Regression, Random Forest Regression, and Gradient Boosting Regression to predict energy prices"""
 from datetime import datetime
 import combine_data as CD
 import plotly.express as px
@@ -10,51 +9,94 @@ from sklearn.ensemble import GradientBoostingRegressor
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import r2_score, mean_squared_error
 import pickle
-##This upto split data function is all data preprocessing needed to train the models, TODO: implement this into separate functions
-
+from sklearn.model_selection import GridSearchCV
 def get_data(months, price_point, fuels):
+    """This function gets the data needed for training the model
+    :param months: The months to get data for
+    :param price_point: The price point to get data for
+    :param fuels: The fuels to get data for
+    :return: fuel, prices, demand"""
     fuel, prices, demand = CD.get_fuel_rtm_demand_data(months, price_point, fuels)
     return fuel, prices, demand
 
 def combine_and_prep_data(fuel, prices, demand, start_date, end_date):
+    """This function combines and prepares the data for training the model
+    :param fuel: The fuel data
+    :param prices: The price data
+    :param demand: The demand data
+    :param start_date: The start date for the data
+    :param end_date: The end date for the data
+    :return: data"""
+
     data = CD.combined_data(fuel, prices, demand, start_date, end_date)
     data = CD.prep_data(data)
     return data
 
 def visualize_data(data):
+    """This function visualizes the data
+    :param data: The data to visualize"""
+    
     px.line(data.groupby(['Day','Hour'])['Total_Renew'].mean().reset_index(),x='Hour', \
             y='Total_Renew',color='Day', title="Avg Hourly Solar Gen By Day")
     px.line(data.groupby(['Day', 'Hour'])['Price'].mean().reset_index(), x='Hour',
             y='Price', color='Day', title='Avg Hourly Price By Day')
     px.line(data.groupby(['Hour', 'Day'])['Load'].mean().reset_index(), x='Hour',
             y='Load', color='Day', title='Avg Hourly Load By Day')
-# %% Split Training data function
 def split_data(data):
+    """This function splits the data into training and testing sets
+    :param data: The data to split
+    :return: X_train, X_test, y_train, y_test"""
+
     X = data.drop(["Price"], axis=1)
     y = data["Price"]
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
     return X_train, X_test, y_train, y_test
 
-#%% Train a Linear regression model function
-def train_linear_model(X_train, y_train, name):
+def train_linear_model(X_train, y_train):
+    """This function trains a linear regression model
+    :param X_train: The training data
+    :param y_train: The training labels
+    :return: linear_model"""
+
     linear_model = LinearRegression()
     linear_model.fit(X_train, y_train)
     return linear_model
 
-#%% Train Decision Tree Regression function
-def train_tree_model(X_train, y_train, name):
+def train_tree_model(X_train, y_train):
+    """This function trains a decision tree regression model
+    :param X_train: The training data
+    :param y_train: The training labels
+    :return: tree"""
+
     tree = DecisionTreeRegressor(max_depth=10)
     tree.fit(X_train, y_train)
     return tree
 
-# %% Train random forest regression function
-def train_forest_model(X_train, y_train, name):
+def train_forest_model(X_train, y_train):
+    """This function trains a random forest regression model
+    :param X_train: The training data
+    :param y_train: The training labels
+    :return: forest"""
+
     forest = RandomForestRegressor(n_estimators=100, max_depth=5, random_state=42)
     forest.fit(X_train, y_train)
     return forest
-from sklearn.model_selection import GridSearchCV
 
+def train_gb_model(X_train, y_train):
+    """This function trains a gradient boosting regression model
+    :param X_train: The training data
+    :param y_train: The training labels
+    :return: gb_model"""
+
+    gb_model = GradientBoostingRegressor(n_estimators=100, learning_rate=0.1, max_depth=5, random_state=42)
+    gb_model.fit(X_train, y_train)
+    return gb_model
 def improve_model(X_train, y_train, model):
+    """This function improves the model by tuning hyperparameters
+    :param X_train: The training data
+    :param y_train: The training labels
+    :param model: The model to improve
+    :return: model"""
     model = model
     param_grid = {
         'n_estimators': [50, 100, 200],
@@ -65,21 +107,18 @@ def improve_model(X_train, y_train, model):
     grid_search.fit(X_train, y_train)
     return grid_search.best_estimator_
 
-# %% Gradient boosting regreesion model function
-def train_gb_model(X_train, y_train, name):
-    gb_model = GradientBoostingRegressor(n_estimators=100, learning_rate=0.1, max_depth=5, random_state=42)
-    gb_model.fit(X_train, y_train)
-    return gb_model
+def evaluate_model(model, X_test, y_test):
+    """This function evaluates the model using the test data
+    :param model: The model to evaluate
+    :param X_test: The test data
+    :param y_test: The test labels
+    :return: mse, r2"""
 
-#generalized evaluation function for models
-def evaluate_model(model, name, X_test, y_test):
     y_pred = model.predict(X_test)
     mse = mean_squared_error(y_test, y_pred)
     r2 = r2_score(y_test, y_pred)
     return mse, r2
 
-# %%
-# %% Main function, runs data preprocessing, model training, and model evaluation
 def main():
     months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug']
     price_point = ['HB_BUSAVG']
