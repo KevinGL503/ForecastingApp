@@ -75,13 +75,9 @@ class DB():
         the `conditions` table in the database. 
         :return: a timeseries DataFrame containing the current conditions data
         """
-        query = self.cur.execute("SELECT * FROM conditions")
-        cols = [col[0] for col in query.description]
-        data = query.fetchall()
-        df = pd.DataFrame(data=data, columns=cols)
+        df = self.get_table_as_df('conditions')
         df['TS'] = pd.to_datetime(df['TS'])
         df.set_index('TS', inplace=True)
-
         return df
     
     def update_curr_prices(self):
@@ -92,3 +88,27 @@ class DB():
         df = dc.get_today_prices()
         df.to_sql('prices', self.con, index=True, index_label='TS', \
                   if_exists='replace')
+    
+    def get_stored_curr_prices(self):
+        """
+        This function retrieves and returns all stored current prices data from
+        the `prices` table in the database. 
+        :return: a timeseries DataFrame containing the current prices data
+        """
+        df = self.get_table_as_df('prices')
+        df['TS'] = pd.to_datetime(df['TS'])
+        df.set_index('TS', inplace=True)
+
+        return df
+    
+    def get_curr_foreacast(self):
+        """
+        This function retrieves and returns all stored current forecasts data from
+        the `forecasts` table in the database. 
+        :return: a timeseries DataFrame containing the current forecasts data
+        """
+        df = self.get_table_as_df('forecasts')
+        df['TS'] = pd.to_datetime(df['TS'])
+        df.set_index('TS', inplace=True)
+
+        return df
