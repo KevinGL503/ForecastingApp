@@ -44,6 +44,21 @@ class DB():
         query = f"CREATE TABLE IF NOT EXISTS {name} ({cols})"
         self.cur.execute(query)
 
+    def get_table_as_df(self, table_name):
+        """
+        This function retrieves data from a specified table in a database and
+        returns it as a pandas DataFrame.
+        
+        :param table_name: The `table_name` parameter is the name of the table from
+        which you want to retrieve the data. 
+        :return: A DataFrame containing the data from the specified table in the
+        database is being returned.
+        """
+        query = self.cur.execute(f"SELECT * FROM {table_name}")
+        cols = [col[0] for col in query.description]
+        data = query.fetchall()
+        df = pd.DataFrame(data=data, columns=cols)
+        return df
 
     def update_curr_cond(self):
         """
