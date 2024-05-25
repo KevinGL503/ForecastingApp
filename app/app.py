@@ -31,4 +31,4 @@ app.layout = html.Div(
 server = app.server
 
 if __name__ == "__main__":
-    app.run(debug=True, host='euclid.local',port=5578)
+    app.run(debug=True, host='0.0.0.0',port=5578)
