@@ -134,10 +134,10 @@ def main():
     X_train, X_test, y_train, y_test = split_data(data)
     
     print('Training models')
-    linear_model = train_linear_model(X_train, y_train, 'Linear')
-    tree = train_tree_model(X_train, y_train, 'Tree')
-    forest = train_forest_model(X_train, y_train, 'Forest')
-    gb_model = train_gb_model(X_train, y_train, 'Gradient Boosting')
+    linear_model = train_linear_model(X_train, y_train)
+    tree = train_tree_model(X_train, y_train)
+    forest = train_forest_model(X_train, y_train)
+    gb_model = train_gb_model(X_train, y_train)
     
     #imrpove models
     print('Improving models')
@@ -146,16 +146,16 @@ def main():
     linear_model = improve_model(X_train, y_train, linear_model)
     tree = improve_model(X_train, y_train, tree)
 
-    mse, r2 = evaluate_model(linear_model, 'Linear', X_test, y_test)
+    mse, r2 = evaluate_model(linear_model, X_test, y_test)
     print(f'Linear Model: MSE={mse}, R2={r2}')
     
-    mse, r2 = evaluate_model(tree, 'Tree', X_test, y_test)
+    mse, r2 = evaluate_model(tree, X_test, y_test)
     print(f'Tree Model: MSE={mse}, R2={r2}')
     
-    mse, r2 = evaluate_model(forest, 'Forest', X_test, y_test)
+    mse, r2 = evaluate_model(forest, X_test, y_test)
     print(f'Forest Model: MSE={mse}, R2={r2}')
     
-    mse, r2 = evaluate_model(gb_model, 'Gradient Boosting', X_test, y_test)
+    mse, r2 = evaluate_model(gb_model, X_test, y_test)
     print(f'Gradient Boosting Model: MSE={mse}, R2={r2}')
     
     with open('./models/models.pkl', 'wb') as models:
