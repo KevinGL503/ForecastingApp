@@ -3,3 +3,5 @@ pycache
 .vscode
 __pycache__
 .venv
+.github
+.pytest_cache
