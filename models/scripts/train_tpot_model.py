@@ -34,7 +34,7 @@ def train_model_tpot(data):
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
 
     print("Running TPOT model")
-    model = TPOTRegressor(generations=2, population_size=50, verbosity=2, random_state=42)
+    model = TPOTRegressor(generations=10, population_size=200, verbosity=4, random_state=42)
     model.fit(X_train, y_train)
     print(model.score(X_test, y_test))
     tpot_pred = model.predict(X_test)
