@@ -70,6 +70,6 @@ def main():
     tpot_model = train_model_tpot(data)
     #show_feature_importance(tpot_model, data)
     with open('models/models.pkl', 'r') as file:
-        pickle.dump(tpot_model, file)
+        pickle.dump(tpot_model.fitted_pipeline_, file)
 if __name__ == "__main__":
     main()
