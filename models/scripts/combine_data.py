@@ -62,7 +62,7 @@ def combined_data(fuel, rtm, demand, s_d, e_d):
 	'Day', 'Hour', 'Price', 'Wind', 'Solar', and 'Load' having timestamps in
 	15 mins intervals as index.
 	"""
-	df = rtm[(rtm.index >= s_d) & (rtm.index < e_d)][['Day', 'Hour', 'Price']].copy()
+	df = rtm[(rtm.index >= s_d) & (rtm.index < e_d)][['Day', 'Hour', 'Price', 'Settlement Point Name']].copy()
 	combined_df = df.copy()
 
 	df = fuel.resample('15min').asfreq().interpolate(method='linear')
