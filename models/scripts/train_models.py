@@ -21,6 +21,7 @@ data = CD.combined_data(fuel, prices, demand, start_date, end_date)
 # %%
 data1 = CD.prep_data(data)
 for point in price_point:
+    reg_name = point.replace('_', '').upper()
     data = data1[data1['Settlement Point Name'] == point].copy()
     X = data.drop(["Price", "Settlement Point Name"], axis=1)
     y = data["Price"]
@@ -63,7 +64,7 @@ for point in price_point:
     r2 = r2_score(y_test, forest_pred)
     print(f'Gradient Boosting mse: {mse}, r2: {r2}')
 
-    with open(f'./models/{point}_models.pkl', 'wb') as models:
+    with open(f'./models/{reg_name}_models.pkl', 'wb') as models:
         pickle.dump(linear_model, models)
         pickle.dump(tree, models)
         pickle.dump(forest, models)

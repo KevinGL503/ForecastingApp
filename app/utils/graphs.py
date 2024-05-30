@@ -2,8 +2,9 @@ import utils.get_curr_cond as cc
 import pickle 
 import plotly.express as px
 
-def get_models():
-    with open("./models/models.pkl", "rb") as f:
+def get_models(region):
+    with open(f"./models/{region.upper()}_models.pkl", "rb") as f:
+        print(f'got {region} model')
         linear = pickle.load(f)
         tree = pickle.load(f)
         forest = pickle.load(f)
@@ -22,7 +23,7 @@ def get_graph(region):
     :return: graph plot
     """
     
-    linear, tree, forest, gb_model = get_models()
+    linear, tree, forest, gb_model = get_models(region)
     curr = cc.get_curr_cond(region)
     curr.dropna(inplace=True)
     curr['Lin'] = linear.predict(curr[['Day', 'Hour', 'Wind', 'Solar', 'Load', 'Prev_Load', 'Net_Load', 'Total_Renew', 'Month']])
