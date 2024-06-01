@@ -1,6 +1,5 @@
 """ This file contains functions to get the current day predicted conditions
     from ERCOT"""
-
 import requests
 import pandas as pd
 
@@ -66,7 +65,7 @@ def get_today_cond():
     return df[['Day', 'Hour', 'Wind', 'Solar', 'Load', 'Prev_Load', 'Net_Load', 'Total_Renew', 'Month']]
 
 
-def get_today_prices(zone='hbBusAvg'):
+def get_today_prices(zones=['hbBusAvg', 'hbHubAvg']):
     """
     This function retrieves current day electricity prices data from ERCOT
     :return: a timeseries DataFrame prices
@@ -76,7 +75,8 @@ def get_today_prices(zone='hbBusAvg'):
     rows = []
     for patch in data:
         this_row = {'TS':patch['timestamp']}
-        this_row.update({zone:patch[f'{zone}']})
+        for zone in zones:
+            this_row.update({zone:patch[f'{zone}']})
         rows.append(this_row)
 
     price = pd.DataFrame(rows)
