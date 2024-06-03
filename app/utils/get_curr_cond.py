@@ -5,6 +5,7 @@ import requests
 import pandas as pd
 import json
 from datetime import datetime
+import pytz
 
 def get_curr_fuel():
     """
@@ -15,7 +16,8 @@ def get_curr_fuel():
     """
 
     fuels = requests.get('https://www.ercot.com/api/1/services/read/dashboards/fuel-mix.json')
-    data = fuels.json()['data'][datetime.strftime(datetime.now(), "%Y-%m-%d")]
+    cst = pytz.timezone('America/Chicago')
+    data = fuels.json()['data'][datetime.strftime(datetime.now(cst), "%Y-%m-%d")]
     current = pd.DataFrame()
 
     for s in ['Wind', 'Solar']:
