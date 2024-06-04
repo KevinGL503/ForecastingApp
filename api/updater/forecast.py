@@ -1,6 +1,6 @@
 """ This file contains functions to create forecasts """
-import day_conds as dc
-from db_helpers import DB
+import updater.day_conds as dc
+from updater.db_helpers import DB
 import pandas as pd
 import pickle
 import plotly.express as px
