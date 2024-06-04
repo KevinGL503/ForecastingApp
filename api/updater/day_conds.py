@@ -65,11 +65,13 @@ def get_today_cond():
     return df[['Day', 'Hour', 'Wind', 'Solar', 'Load', 'Prev_Load', 'Net_Load', 'Total_Renew', 'Month']]
 
 
-def get_today_prices(zones=['hbBusAvg', 'hbHubAvg']):
+def get_today_prices():
     """
     This function retrieves current day electricity prices data from ERCOT
     :return: a timeseries DataFrame prices
     """
+    zones = ['hbBusAvg', 'hbHubAvg', 'hbHouston', 'hbNorth', 'hbPan', \
+                    'hbSouth', 'hbWest']
     prices = requests.get("https://www.ercot.com/api/1/services/read/dashboards/system-wide-prices.json")
     data = prices.json()['rtSppData']
     rows = []
