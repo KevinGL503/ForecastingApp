@@ -1,6 +1,6 @@
 """ Run this script to update stored conditions, prices, and forecasts"""
-from db_helpers import DB
-import forecast as fc
+from updater.db_helpers import DB
+import updater.forecast as fc
 
 if __name__ == '__main__':
     db = DB()
