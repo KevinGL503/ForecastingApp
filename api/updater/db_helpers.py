@@ -1,7 +1,8 @@
-import day_conds as dc
+import updater.day_conds as dc
 import pandas as pd
 import sqlite3
 import os
+import json
 
 class DB():
     """ DB class to manage the database contains connection and cursor"""
@@ -112,3 +113,29 @@ class DB():
         df.set_index('TS', inplace=True)
 
         return df
+    
+    def get_curr_forecast_json(self, region):
+        """
+        This function retrieves forecast data in JSON format for a specified region
+        from the database.
+        
+        :param region: The `region` parameter in the `get_curr_forecast_json`
+        function is used to specify the region for which you want to retrieve the
+        current forecast data.
+        :return: either the forecast data for the specified region in JSON format,
+        or the string 'Invalid Region' if the specified region is not in the list of
+        hubs. If an exception occurs during the execution of the function, it will
+        return the error message associated with the exception.
+        """
+        hubs = ['HBHUBAVG', 'HBBUSAVG', 'HBSOUTH', 'HBWEST', 'HBNORTH', \
+                    'HBHOUSTON', 'HBPAN']
+        try:
+            if region.upper() not in hubs:
+                return 'Invalid Region'
+            query = self.cur.execute(f"SELECT * FROM {region}_forecasts")
+            cols = [col[0] for col in query.description]
+            data = query.fetchall()
+            results = [dict(zip(cols, row)) for row in data]
+        except Exception as e:
+            return e.args[0]
+        return results
