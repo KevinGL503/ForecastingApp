@@ -14,6 +14,10 @@ def get_models(region):
     return [linear, tree, forest, gb_model]
 
 def create_current_forecasts():
+    """
+    The function creates current forecasts for different regions using machine
+    learning models and stores the results in the database as tables named `REGION_forecasts`.
+    """
     db = DB()
     df = db.get_stored_curr_cond()
     hbs = ['HBBUSAVG', 'HBSOUTH', 'HBWEST', 'HBNORTH', 'HBHOUSTON']
@@ -29,10 +33,3 @@ def create_current_forecasts():
 
         curr.drop(columns=cols).to_sql(f'{hb}_forecasts', db.con, if_exists='replace', \
                                 index=True, index_label='TS')
-
-
-if __name__ == '__main__':
-    db = DB()
-    db.update_curr_prices()
-    db.update_curr_cond()
-    create_current_forecasts()
