@@ -139,3 +139,18 @@ class DB():
         except Exception as e:
             return e.args[0]
         return results
+    
+    def get_curr_conditions_json(self):
+        """
+        This function retrieves conditions data from the database in JSON format.
+        :return: the current stored conditions. If an exception occurs during the execution of the query,
+        the function will return the error message.
+        """
+        try:
+            query = self.cur.execute(f"SELECT * FROM conditions")
+            cols = [col[0] for col in query.description]
+            data = query.fetchall()
+            results = [dict(zip(cols, row)) for row in data]
+        except Exception as e:
+            return e.args[0]
+        return results
