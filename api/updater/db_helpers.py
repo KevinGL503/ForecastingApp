@@ -101,13 +101,13 @@ class DB():
 
         return df
     
-    def get_curr_foreacast(self):
+    def get_curr_forecast(self, region):
         """
-        This function retrieves and returns all stored current forecasts data from
-        the `forecasts` table in the database. 
+        This function retrieves and returns the stored current forecasts data for
+        the given region
         :return: a timeseries DataFrame containing the current forecasts data
         """
-        df = self.get_table_as_df('forecasts')
+        df = self.get_table_as_df(f'{region}_forecasts')
         df['TS'] = pd.to_datetime(df['TS'])
         df.set_index('TS', inplace=True)
 
