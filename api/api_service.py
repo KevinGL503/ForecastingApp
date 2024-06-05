@@ -22,6 +22,3 @@ def prices():
     db = DB()
     df = db.get_curr_prices_json()
     return df
-
-if __name__ == "__main__":
-    api.run(debug=True, host='0.0.0.0',port=5555)
