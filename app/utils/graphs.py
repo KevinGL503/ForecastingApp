@@ -1,6 +1,7 @@
-import utils.get_curr_cond as cc
+import app.utils.get_curr_cond as cc
 import pickle 
 import plotly.express as px
+import updater.forecast as fc
 
 def get_models(region):
     with open(f"./models/{region.upper()}_models.pkl", "rb") as f:

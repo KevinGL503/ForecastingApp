@@ -1,5 +1,4 @@
-#%%
-import utils.graphs as gp
+import app.utils.graphs as gp
 import dash
 from dash import dcc
 from dash import html

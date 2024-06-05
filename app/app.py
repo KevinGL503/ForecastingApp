@@ -13,7 +13,7 @@ app.layout = html.Div(
             children=[
                 dbc.NavItem(dbc.NavLink("Home", href="/")),
                 dbc.NavItem(dbc.NavLink("Prices", href="/prices")),
-                dbc.NavItem(dbc.NavLink("archive", href="/archive")),
+                dbc.NavItem(dbc.NavLink("Archive", href="/archive")),
             ],
             brand=html.Img(
                 src="/assets/favicon.ico",
@@ -27,8 +27,3 @@ app.layout = html.Div(
         dash.page_container,
     ]
 )
-
-server = app.server
-
-if __name__ == "__main__":
-    app.run(debug=True, host='0.0.0.0',port=5578)
