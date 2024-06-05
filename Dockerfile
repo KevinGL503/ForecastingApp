@@ -10,10 +10,9 @@ WORKDIR /ForecastingApp
 COPY requirements.txt .
 RUN python -m pip install -r requirements.txt
 
-COPY app ./app/
-COPY models ./models/
+COPY . .
 
 EXPOSE 5578
 
 # FIXME: This runs the development server only (not for prod/deploy)
-ENTRYPOINT ["python3", "app/app.py"]
+ENTRYPOINT [ "python3", "main_app.py"]
