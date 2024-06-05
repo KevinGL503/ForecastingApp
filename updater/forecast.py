@@ -20,7 +20,8 @@ def create_current_forecasts():
     """
     db = DB()
     df = db.get_stored_curr_cond()
-    hbs = ['HBBUSAVG', 'HBSOUTH', 'HBWEST', 'HBNORTH', 'HBHOUSTON']
+    hbs = ['HBHUBAVG', 'HBBUSAVG', 'HBSOUTH', 'HBWEST', 'HBNORTH', \
+                    'HBHOUSTON', 'HBPAN']
     for hb in hbs:
         linear, tree, forest, gb_model = get_models(hb)
         curr = df.copy()

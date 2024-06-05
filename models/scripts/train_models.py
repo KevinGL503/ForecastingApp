@@ -12,10 +12,11 @@ from sklearn.metrics import r2_score, mean_squared_error
 import pickle
 #%% Get fuel, prices, and demand data
 months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug']
-price_point = ['HB_BUSAVG', 'HB_SOUTH', 'HB_WEST', 'HB_NORTH', 'HB_HOUSTON']
+price_point = hubs = ['HB_HUBAVG', 'HB_BUSAVG', 'HB_SOUTH', 'HB_WEST', 'HB_NORTH', \
+                    'HB_HOUSTON', 'HB_PAN']
 fuels = ['Wind', 'Solar']
 start_date = datetime.strptime('05/01/2023', '%m/%d/%Y')
-end_date = datetime.strptime('08/01/2023', '%m/%d/%Y')
+end_date = datetime.strptime('09/01/2023', '%m/%d/%Y')
 fuel, prices, demand = CD.get_fuel_rtm_demand_data(months, price_point, fuels)
 data = CD.combined_data(fuel, prices, demand, start_date, end_date)
 # %%

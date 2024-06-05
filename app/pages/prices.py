@@ -8,7 +8,8 @@ dash.register_page(__name__)
 layout = html.Div([
     html.H1('Daily SPPs (Actual vs Forecasted)',style={'padding':'30px'}
             ),
-    dcc.Dropdown(['hbBusAvg', 'hbNorth', 'hbWest'], ['hbBusAvg'], 
+    dcc.Dropdown(['hbBusAvg', 'hbHubAvg', 'hbHouston', 'hbNorth', 'hbPan', \
+                    'hbSouth', 'hbWest'], ['hbBusAvg'], 
                  id='region_dropdown',
                  multi=True),
     html.Div(id='graph_container')
