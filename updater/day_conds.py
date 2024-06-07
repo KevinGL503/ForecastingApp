@@ -78,7 +78,7 @@ def get_today_prices():
     for patch in data:
         this_row = {'TS':patch['timestamp']}
         for zone in zones:
-            this_row.update({zone:patch[f'{zone}']})
+            this_row.update({zone.upper():patch[f'{zone}']})
         rows.append(this_row)
 
     price = pd.DataFrame(rows)
