@@ -23,10 +23,10 @@ def get_graph(region):
     region. 
     :return: graph plot
     """
-    curr = requests.get(f'http://localhost:5555/forecast/{region}')
+    curr = requests.get(f'http://localhost:5578/api/forecast/{region}')
     curr = pd.DataFrame(curr.json())
     curr.set_index('TS', inplace=True)
-    prices = requests.get(f'http://localhost:5555/prices')
+    prices = requests.get(f'http://localhost:5578/api/prices')
     prices = pd.DataFrame(prices.json())
     prices.set_index('TS', inplace=True)
     curr['Price'] =  prices[region.upper()]
