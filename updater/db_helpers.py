@@ -3,17 +3,21 @@ import pandas as pd
 import sqlite3
 import os
 import json
+from dotenv import load_dotenv
+# Load environment variables from .env file
+load_dotenv()
+DB_PATH = os.getenv('DATABASE_PATH')
 
 class DB():
     """ DB class to manage the database contains connection and cursor"""
 
-    def __init__(self, db_file_path='updater/forecastDB.db'):
+    def __init__(self, db_file_path=DB_PATH):
         """
         The function initializes a connection to a SQLite database using a specified
         file path.
         
         :param db_file_path: parameter is the file path to the SQLite database 
-        file that will be used. By default, it is set `'api/updater/forecastDB.db'`
+        file that will be used. By default, it is set `'updater/forecastDB.db'`
         This parameter allows you to specify a custom database file path 
         """
         try:
@@ -27,8 +31,8 @@ class DB():
         The function checks if a database file exists and creates it if it doesn't.
         :return: always returns `True`.
         """
-        if not os.path.exists('updater/forecastDB.db'):
-            con = sqlite3.connect('updater/forecastDB.db')
+        if not os.path.exists(DB_PATH):
+            con = sqlite3.connect(DB_PATH)
             print('Created DB file')
             return True
         return True

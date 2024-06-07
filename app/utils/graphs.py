@@ -2,6 +2,12 @@ import pickle
 import plotly.express as px
 import requests
 import pandas as pd
+from dotenv import load_dotenv
+import os
+
+# Load environment variables from .env file
+load_dotenv()
+BASE_URL = os.getenv('BASE_URL')
 
 def get_models(region):
     with open(f"./models/{region.upper()}_models.pkl", "rb") as f:
@@ -23,10 +29,10 @@ def get_graph(region):
     region. 
     :return: graph plot
     """
-    curr = requests.get(f'http://localhost:5578/api/forecast/{region}')
+    curr = requests.get(f'{BASE_URL}/api/forecast/{region}')
     curr = pd.DataFrame(curr.json())
     curr.set_index('TS', inplace=True)
-    prices = requests.get(f'http://localhost:5578/api/prices')
+    prices = requests.get(f'{BASE_URL}/api/prices')
     prices = pd.DataFrame(prices.json())
     prices.set_index('TS', inplace=True)
     curr['Price'] =  prices[region.upper()]

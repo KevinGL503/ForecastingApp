@@ -7,3 +7,4 @@ lightgbm==4.3.0
 matplotlib==3.8.3
 dash-bootstrap-components==1.6.0
 pytest==8.2.1
+python-dotenv==1.0.1
