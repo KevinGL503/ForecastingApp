@@ -1,7 +1,7 @@
-import app.utils.get_curr_cond as cc
 import pickle 
 import plotly.express as px
-import updater.forecast as fc
+import requests
+import pandas as pd
 
 def get_models(region):
     with open(f"./models/{region.upper()}_models.pkl", "rb") as f:
@@ -23,14 +23,13 @@ def get_graph(region):
     region. 
     :return: graph plot
     """
-    
-    linear, tree, forest, gb_model = get_models(region)
-    curr = cc.get_curr_cond(region)
-    curr.dropna(inplace=True)
-    curr['Lin'] = linear.predict(curr[['Day', 'Hour', 'Wind', 'Solar', 'Load', 'Prev_Load', 'Net_Load', 'Total_Renew', 'Month']])
-    curr['Tree'] = tree.predict(curr[['Day', 'Hour', 'Wind', 'Solar', 'Load', 'Prev_Load', 'Net_Load', 'Total_Renew','Month']])
-    curr['Forest'] = forest.predict(curr[['Day', 'Hour', 'Wind', 'Solar', 'Load', 'Prev_Load', 'Net_Load', 'Total_Renew','Month']])
-    curr['GB'] = gb_model.predict(curr[['Day', 'Hour', 'Wind', 'Solar', 'Load', 'Prev_Load', 'Net_Load', 'Total_Renew','Month']])
+    curr = requests.get(f'http://localhost:5555/forecast/{region}')
+    curr = pd.DataFrame(curr.json())
+    curr.set_index('TS', inplace=True)
+    prices = requests.get(f'http://localhost:5555/prices')
+    prices = pd.DataFrame(prices.json())
+    prices.set_index('TS', inplace=True)
+    curr['Price'] =  prices[region.upper()]
 
     fig = px.line(curr, x=curr.index, y=['Price','GB'], 
                 labels={'Price': 'Price ($)', 'TS': '', "value": 'Price'},
