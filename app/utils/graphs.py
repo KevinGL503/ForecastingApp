@@ -42,7 +42,7 @@ def get_graph(region):
                 labels={'Price': 'Price ($)', 'TS': '', "value": 'Price'},
                 title=f'Daily SPPs for {region}')
     fig.update_layout(legend_title_text='Models', hovermode="x unified")
-    fig.update_traces(hovertemplate='$ %{y}')
+    fig.update_traces(hovertemplate='$ %{y}', line={'width': 4})
     fig.update_layout(legend=dict(
         orientation="h",  
         yanchor="bottom",

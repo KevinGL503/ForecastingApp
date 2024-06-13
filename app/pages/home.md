@@ -1,6 +1,7 @@
 # Luzcast
 
 ![logo](../assets/powerpricelogo.png)
+
 Luzcast is a power price forecasting project designed to attempt predicting current day power prices across the ERCOT (Electric Reliability Council of Texas) regions. By leveraging historical data on load, wind, and solar energy, alongside historical pricing information, this tool provides power price forecasts.
 
 
